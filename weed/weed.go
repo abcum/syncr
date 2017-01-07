@@ -41,10 +41,18 @@ type Options struct {
 }
 
 type Storage struct {
+	opts *Options
 }
 
 func New(path string, opts *Options) (*Storage, error) {
-	return nil, nil
+
+	var s *Storage
+	var e error
+
+	s.opts = opts
+
+	return s, e
+
 }
 
 func (s *Storage) Close() error {
