@@ -18,6 +18,8 @@ import (
 	"io"
 )
 
+// Syncable is an interface which represents an append-only data stream
+// storage type for reading and writing data on local or remote storage.
 type Syncable interface {
 	io.Reader
 	io.Writer
