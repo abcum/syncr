@@ -14,7 +14,7 @@ Syncr is a library for storage of append-only log data on local or remote storag
 - Append-only writing to storage using io.Writer
 - In-order reading of entire storage using io.Reader
 - Ability to buffer writes, or sync writes immediately	
-- Write to and read from a directory of log files as if it was one big file
+- Write to and read from a directory of log files as if it were one big file
 - Support for append-only files locally, and in S3, GCS, RiakCS, CephFS, SeaweedFS
 
 #### Installation
