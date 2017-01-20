@@ -14,7 +14,10 @@
 
 package weed
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
 
 var (
 	// ErrSeekPositionNotSupported occurs when a syncable type receives a
@@ -42,6 +45,7 @@ type Options struct {
 
 // Storage represents a SeaweedFS reader and writer.
 type Storage struct {
+	sync.Mutex
 	opts *Options
 }
 

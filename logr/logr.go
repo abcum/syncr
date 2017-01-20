@@ -43,6 +43,7 @@ type Options struct {
 
 // Storage represents a rotating log-file reader and writer.
 type Storage struct {
+	sync.Mutex
 	opts *Options
 	pntr *os.File
 	lock sync.Mutex
@@ -101,11 +102,7 @@ func (s *Storage) Close() error {
 		s.file.extn = ""
 	}()
 
-	if s.pntr == nil {
-		return nil
-	}
-
-	return s.pntr.Close()
+	return s.stop()
 
 }
 
@@ -193,6 +190,14 @@ func (s *Storage) Seek(offset int64, whence int) (int64, error) {
 
 	s.file.seek = whence
 
+	if s.file.seek == 0 {
+		s.head()
+	}
+
+	if s.file.seek == 2 {
+		s.last()
+	}
+
 	return 0, nil
 
 }
@@ -212,27 +217,64 @@ func (s *Storage) Sync() error {
 
 // ---------------------------------------------------------------------------
 
+// stop closes any file which is currently open, and sets the current file
+// pointer to nil, when closing the storage, or opening a new data file.
+func (s *Storage) stop() error {
+
+	if s.pntr == nil {
+		return nil
+	}
+
+	defer func() {
+		s.pntr = nil
+	}()
+
+	return s.pntr.Close()
+
+}
+
+// head opens the first log file for reading, checking all available log
+// files and retrieving the next file in-order. If no next log file is
+// available, then an EOF error will be returned.
+func (s *Storage) head() error {
+
+	var err error
+
+	err = s.stop()
+	if err != nil {
+		return err
+	}
+
+	for _, info := range s.look() {
+
+		// Last file so open as last
+		if info.Name() == s.file.base {
+			return s.last()
+		}
+
+		s.pntr, err = os.Open(path.Join(s.file.base, info.Name()))
+		return err
+
+	}
+
+	// Otherwise open the last file as no other files exist
+	return s.last()
+
+}
+
 // next opens the next log file for reading, checking all available log
 // files and retrieving the next file in-order. If no next log file is
 // available, then an EOF error will be returned.
 func (s *Storage) next() error {
 
-	files, err := ioutil.ReadDir(s.file.path)
+	var err error
+
+	/*err = s.stop()
 	if err != nil {
 		return err
-	}
+	}*/
 
-	for _, info := range files {
-
-		// Ignore folders
-		if info.IsDir() {
-			continue
-		}
-
-		// Ignore invisible files
-		if info.Name()[:1] == "." {
-			continue
-		}
+	for _, info := range s.look() {
 
 		// Last file so open as last
 		if info.Name() == s.file.base {
@@ -256,7 +298,6 @@ func (s *Storage) next() error {
 	}
 
 	// Otherwise open the last file as no other files exist
-
 	return s.last()
 
 }
@@ -267,6 +308,11 @@ func (s *Storage) last() error {
 
 	var err error
 	var mta os.FileInfo
+
+	err = s.stop()
+	if err != nil {
+		return err
+	}
 
 	s.pntr, err = os.OpenFile(s.file.base, os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
@@ -301,19 +347,41 @@ func (s *Storage) swap() error {
 
 	var err error
 
+	err = s.stop()
+	if err != nil {
+		return err
+	}
+
 	err = os.Rename(s.file.base, s.name())
 	if err != nil {
 		return err
 	}
 
-	s.pntr, err = os.OpenFile(s.file.base, os.O_CREATE|os.O_RDWR, 0666)
+	return s.last()
+
+}
+
+func (s *Storage) look() []os.FileInfo {
+
+	var files []os.FileInfo
+
+	dir, err := ioutil.ReadDir(s.file.path)
 	if err != nil {
-		return err
+		return nil
 	}
 
-	s.size.now = 0
+	for _, info := range dir {
 
-	return nil
+		// Ignore folders
+		if info.IsDir() && info.Name()[:1] == "." {
+			continue
+		}
+
+		files = append(files, info)
+
+	}
+
+	return files
 
 }
 

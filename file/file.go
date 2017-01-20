@@ -21,6 +21,7 @@ import (
 
 // Storage represents a file reader and writer.
 type Storage struct {
+	sync.Mutex
 	file string
 	pntr *os.File
 	lock sync.Mutex

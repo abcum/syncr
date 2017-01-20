@@ -16,6 +16,7 @@ package syncr
 
 import (
 	"io"
+	"sync"
 )
 
 // Syncable is an interface which represents an append-only data stream
@@ -25,5 +26,6 @@ type Syncable interface {
 	io.Writer
 	io.Seeker
 	io.Closer
+	sync.Locker
 	Sync() error
 }

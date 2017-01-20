@@ -14,7 +14,10 @@
 
 package ceph
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
 
 var (
 	// ErrSeekPositionNotSupported occurs when a syncable type receives a
@@ -42,6 +45,7 @@ type Options struct {
 
 // Storage represents a CephFS reader and writer.
 type Storage struct {
+	sync.Mutex
 	opts *Options
 }
 
