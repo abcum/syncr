@@ -28,15 +28,14 @@ type Storage struct {
 }
 
 // New creates a new Syncable storage instance for reading and writing.
-func New(name string) (*Storage, error) {
+func New(name string) (s *Storage, e error) {
 
-	var s *Storage
-	var e error
+	s = &Storage{}
 
 	s.file = name
 	s.pntr, e = os.OpenFile(s.file, os.O_CREATE|os.O_RDWR, 0666)
 
-	return s, e
+	return
 
 }
 

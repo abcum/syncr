@@ -62,10 +62,9 @@ type Storage struct {
 }
 
 // New creates a new Syncable storage instance for reading and writing.
-func New(name string, opts *Options) (*Storage, error) {
+func New(name string, opts *Options) (s *Storage, e error) {
 
-	var s *Storage
-	var e error
+	s = &Storage{}
 
 	s.size.max = opts.MaxSize * 1024 * 1024
 
@@ -81,7 +80,7 @@ func New(name string, opts *Options) (*Storage, error) {
 		return nil, e
 	}
 
-	return s, e
+	return
 
 }
 

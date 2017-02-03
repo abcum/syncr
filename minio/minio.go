@@ -50,14 +50,13 @@ type Storage struct {
 }
 
 // New creates a new Syncable storage instance for reading and writing.
-func New(path string, opts *Options) (*Storage, error) {
+func New(path string, opts *Options) (s *Storage, e error) {
 
-	var s *Storage
-	var e error
+	s = &Storage{}
 
 	s.opts = opts
 
-	return s, e
+	return
 
 }
 
