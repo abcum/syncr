@@ -1,0 +1,6 @@
+{
+  "Pack": "logr",
+  "Path": ".test/",
+  "Name": ".test/logr.db",
+  "Opts": "&Options{MaxSize: 1}"
+}

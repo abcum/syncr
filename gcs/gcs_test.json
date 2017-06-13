@@ -1,0 +1,7 @@
+{
+  "Pack": "gcs",
+  "Buck": "abcum-tests",
+  "Path": "syncr/",
+  "Name": "abcum-tests/syncr/test.db",
+  "Opts": "&Options{MinSize: 1}"
+}
