@@ -48,16 +48,19 @@ type Storage struct {
 	pntr *os.File
 	lock sync.Mutex
 	size struct {
-		max int // max file size in bytes
-		now int // current file size in bytes
+		max int
+		now int
 	}
 	file struct {
-		seek int // are we at beginning (0) or end (2)
+		seek int
+		last string
 		full string
 		path string
 		base string
 		name string
 		extn string
+		main string
+		poss []string
 	}
 }
 
@@ -66,14 +69,15 @@ func New(name string, opts *Options) (s *Storage, e error) {
 
 	s = &Storage{}
 
-	s.size.max = opts.MaxSize * 1024 * 1024
-
 	s.opts = opts
 	s.file.full = name
 	s.file.path = path.Dir(name)
 	s.file.base = path.Base(name)
 	s.file.extn = path.Ext(name)
-	s.file.name = s.file.base[:len(s.file.extn)]
+	s.file.name = s.file.base[:len(s.file.extn)+1]
+	s.file.main = path.Join(s.file.path, s.file.base)
+
+	s.size.max = opts.MaxSize * 1024 * 1024
 
 	// Ensure the data directory exists
 	if e = os.MkdirAll(s.file.path, 0744); e != nil {
@@ -94,11 +98,14 @@ func (s *Storage) Close() error {
 	defer func() {
 		s.opts = nil
 		s.pntr = nil
+		s.file.last = ""
 		s.file.full = ""
 		s.file.path = ""
 		s.file.base = ""
 		s.file.name = ""
 		s.file.extn = ""
+		s.file.main = ""
+		s.file.poss = nil
 	}()
 
 	return s.stop()
@@ -110,20 +117,31 @@ func (s *Storage) Close() error {
 // reached. It returns the number of bytes read (0 <= n <= len(p)) and
 // any error encountered. If the Storage has reached the final log file,
 // then an EOF error will be returned.
-func (s *Storage) Read(p []byte) (n int, err error) {
+func (s *Storage) Read(p []byte) (int, error) {
 
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
-	n, err = s.pntr.Read(p)
-
-	if err == io.EOF {
-		if err = s.next(); err != nil {
-			return
+	// No data file is open yet so open one.
+	if s.pntr == nil {
+		if err := s.head(); err != nil {
+			return 0, err
 		}
 	}
 
-	return
+	// We are at the end of the stream.
+	if s.file.seek != 0 {
+		if err := s.head(); err != nil {
+			return 0, err
+		}
+	}
+
+	n, err := s.pntr.Read(p)
+	if err == io.EOF {
+		err = s.next()
+	}
+
+	return n, err
 
 }
 
@@ -132,39 +150,39 @@ func (s *Storage) Read(p []byte) (n int, err error) {
 // and any error encountered that caused the write to stop early. Write
 // will always append data to the end of the Storage data stream, ensuring
 // data is append-only and never overwritten.
-func (s *Storage) Write(p []byte) (n int, err error) {
+func (s *Storage) Write(p []byte) (int, error) {
 
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	// No data file is open yet so open one.
 	if s.pntr == nil {
-		if err = s.last(); err != nil {
+		if err := s.last(); err != nil {
 			return 0, err
 		}
 	}
 
 	// We are not at the end of the stream.
 	if s.file.seek != 2 {
-		if err = s.last(); err != nil {
+		if err := s.last(); err != nil {
 			return 0, err
 		}
 	}
 
 	// We need to rotate to a new data file.
 	if s.size.max < s.size.now+len(p) {
-		if err = s.swap(); err != nil {
+		if err := s.swap(); err != nil {
 			return 0, err
 		}
 	}
 
 	// Write to the data file.
-	n, err = s.pntr.Write(p)
+	n, err := s.pntr.Write(p)
 
 	// Update the data file size.
 	s.size.now += n
 
-	return
+	return n, err
 
 }
 
@@ -216,9 +234,19 @@ func (s *Storage) Sync() error {
 
 // ---------------------------------------------------------------------------
 
-// stop closes any file which is currently open, and sets the current file
-// pointer to nil, when closing the storage, or opening a new data file.
-func (s *Storage) stop() error {
+func (s *Storage) load(file string) (err error) {
+
+	s.pntr, err = os.Open(path.Join(s.file.path, file))
+
+	s.file.last = file
+
+	s.file.seek = 0
+
+	return err
+
+}
+
+func (s *Storage) stop() (err error) {
 
 	if s.pntr == nil {
 		return nil
@@ -232,80 +260,40 @@ func (s *Storage) stop() error {
 
 }
 
-// head opens the first log file for reading, checking all available log
-// files and retrieving the next file in-order. If no next log file is
-// available, then an EOF error will be returned.
-func (s *Storage) head() error {
-
-	var err error
+func (s *Storage) head() (err error) {
 
 	err = s.stop()
 	if err != nil {
 		return err
 	}
 
-	for _, info := range s.look() {
-
-		// Last file so open as last
-		if info.Name() == s.file.base {
-			return s.last()
-		}
-
-		s.pntr, err = os.Open(path.Join(s.file.base, info.Name()))
-		return err
-
+	for _, file := range s.look() {
+		return s.load(file)
 	}
 
-	// Otherwise open the last file as no other files exist
-	return s.last()
+	return io.EOF
 
 }
 
-// next opens the next log file for reading, checking all available log
-// files and retrieving the next file in-order. If no next log file is
-// available, then an EOF error will be returned.
-func (s *Storage) next() error {
+func (s *Storage) next() (err error) {
 
-	var err error
-
-	/*err = s.stop()
+	err = s.stop()
 	if err != nil {
 		return err
-	}*/
-
-	for _, info := range s.look() {
-
-		// Last file so open as last
-		if info.Name() == s.file.base {
-			return s.last()
-		}
-
-		// No current file so open first
-		if s.pntr == nil {
-			s.pntr, err = os.Open(path.Join(s.file.base, info.Name()))
-			return err
-		}
-
-		// Current file so open next
-		if info.Name() == s.pntr.Name() {
-			continue
-		}
-
-		s.pntr, err = os.Open(path.Join(s.file.base, info.Name()))
-		return err
-
 	}
 
-	// Otherwise open the last file as no other files exist
-	return s.last()
+	for _, file := range s.look() {
+		if file > s.file.last {
+			return s.load(file)
+		}
+	}
+
+	return io.EOF
 
 }
 
-// last ensures that the specified directory exists, and opens the latest
-// file for writing, seeking to the end of the file, and storing the size.
-func (s *Storage) last() error {
+func (s *Storage) last() (err error) {
 
-	var err error
 	var mta os.FileInfo
 
 	err = s.stop()
@@ -313,7 +301,7 @@ func (s *Storage) last() error {
 		return err
 	}
 
-	s.pntr, err = os.OpenFile(s.file.base, os.O_CREATE|os.O_RDWR, 0666)
+	s.pntr, err = os.OpenFile(s.file.main, os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
 		return err
 	}
@@ -340,18 +328,14 @@ func (s *Storage) last() error {
 
 }
 
-// swap rotates out the current writable log file, and creates a new file
-// for writing. The old file is renamed using the current data and time.
-func (s *Storage) swap() error {
-
-	var err error
+func (s *Storage) swap() (err error) {
 
 	err = s.stop()
 	if err != nil {
 		return err
 	}
 
-	err = os.Rename(s.file.base, s.name())
+	err = os.Rename(s.file.main, s.name())
 	if err != nil {
 		return err
 	}
@@ -360,9 +344,11 @@ func (s *Storage) swap() error {
 
 }
 
-func (s *Storage) look() []os.FileInfo {
+func (s *Storage) look() []string {
 
-	var files []os.FileInfo
+	if s.file.poss != nil {
+		return s.file.poss
+	}
 
 	dir, err := ioutil.ReadDir(s.file.path)
 	if err != nil {
@@ -371,21 +357,23 @@ func (s *Storage) look() []os.FileInfo {
 
 	for _, info := range dir {
 
-		// Ignore folders
+		// Ignore folders and invisibles
 		if info.IsDir() && info.Name()[:1] == "." {
 			continue
 		}
 
-		files = append(files, info)
+		s.file.poss = append(s.file.poss, info.Name())
 
 	}
 
-	return files
+	return s.file.poss
 
 }
 
-// name creates a new file archive name for the current data file, using
-// the current data and time, and the original file name.
 func (s *Storage) name() string {
-	return s.file.name + "-" + time.Now().UTC().Format(time.RFC3339) + "." + s.file.extn
+	return path.Join(s.file.path, s.file.name+"-"+s.time()+s.file.extn)
+}
+
+func (s *Storage) time() string {
+	return time.Now().UTC().Format("2006-01-02T15-04-05.999999999")
 }
