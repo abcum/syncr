@@ -35,7 +35,7 @@ var sze int
 var txt []byte
 var out []byte
 
-func TestMain(t *testing.T) {
+func init() {
 
 	os.RemoveAll("syncr/")
 
@@ -55,6 +55,10 @@ func TestMain(t *testing.T) {
 	}
 
 	txt, _ = ioutil.ReadFile("../data.txt")
+
+}
+
+func TestMain(t *testing.T) {
 
 	defer func() {
 		os.RemoveAll("syncr/")

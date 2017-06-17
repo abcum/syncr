@@ -32,11 +32,15 @@ var sze int
 var txt []byte
 var out []byte
 
-func TestMain(t *testing.T) {
+func init() {
 
 	os.RemoveAll(".test.db")
 
 	txt, _ = ioutil.ReadFile("../data.txt")
+
+}
+
+func TestMain(t *testing.T) {
 
 	defer func() {
 		os.RemoveAll(".test.db")
