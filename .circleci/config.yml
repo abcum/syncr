@@ -7,6 +7,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Gcauth
+          command: gcauth
+      - run:
           name: Clean
           command: make clean
       - run:
