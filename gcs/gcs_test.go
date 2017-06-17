@@ -41,7 +41,7 @@ func init() {
 
 	x := context.Background()
 	c, _ := storage.NewClient(x)
-	b := c.Bucket("surreal")
+	b := c.Bucket("abcum-tests")
 	i := b.Objects(x, &storage.Query{Prefix: "syncr/"})
 	for {
 		o, e := i.Next()
@@ -64,7 +64,7 @@ func TestMain(t *testing.T) {
 	defer func() {
 		x := context.Background()
 		c, _ := storage.NewClient(x)
-		b := c.Bucket("surreal")
+		b := c.Bucket("abcum-tests")
 		i := b.Objects(x, &storage.Query{Prefix: "syncr/"})
 		for {
 			o, e := i.Next()
