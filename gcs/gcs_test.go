@@ -40,7 +40,10 @@ func TestMain(t *testing.T) {
 	os.RemoveAll("syncr/")
 
 	x := context.Background()
-	c, _ := storage.NewClient(x)
+	c, e := storage.NewClient(x)
+	if e != nil {
+		panic(e)
+	}
 	b := c.Bucket("abcum-tests")
 	i := b.Objects(x, &storage.Query{Prefix: "syncr/"})
 	for {
@@ -59,7 +62,10 @@ func TestMain(t *testing.T) {
 
 	defer func() {
 		x := context.Background()
-		c, _ := storage.NewClient(x)
+		c, e := storage.NewClient(x)
+		if e != nil {
+			panic(e)
+		}
 		b := c.Bucket("abcum-tests")
 		i := b.Objects(x, &storage.Query{Prefix: "syncr/"})
 		for {

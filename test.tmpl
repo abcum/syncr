@@ -62,7 +62,10 @@ func TestMain(t *testing.T) {
 
 	{{if eq .Pack "gcs"}}
 	x := context.Background()
-	c, _ := storage.NewClient(x)
+	c, e := storage.NewClient(x)
+	if e != nil {
+		panic(e)
+	}
 	b := c.Bucket("{{.Buck}}")
 	i := b.Objects(x, &storage.Query{Prefix:"{{.Path}}"})
 	for {
@@ -102,7 +105,10 @@ func TestMain(t *testing.T) {
 	{{if eq .Pack "gcs"}}
 	defer func() {
 		x := context.Background()
-		c, _ := storage.NewClient(x)
+		c, e := storage.NewClient(x)
+		if e != nil {
+			panic(e)
+		}
 		b := c.Bucket("{{.Buck}}")
 		i := b.Objects(x, &storage.Query{Prefix:"{{.Path}}"})
 		for {
