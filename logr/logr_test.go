@@ -48,20 +48,20 @@ func TestMain(t *testing.T) {
 
 	var s *Storage
 
-	Convey("Create a new syncr instance", t, func() {
+	Convey("Create a new logr syncr instance", t, func() {
 		h, e := New(".test/logr.db", &Options{MaxSize: 1})
 		So(e, ShouldBeNil)
 		s = h
 	})
 
-	Convey("Read data from the syncr instance", t, func() {
+	Convey("Read data from the logr syncr instance", t, func() {
 		s.Seek(0, 0)
 		b := make([]byte, 128)
 		_, e := s.Read(b)
 		So(e, ShouldEqual, io.EOF)
 	})
 
-	Convey("Write data to the syncr instance", t, func() {
+	Convey("Write data to the logr syncr instance", t, func() {
 		s.Seek(0, 0)
 		for i := 0; i < run; i++ {
 			l, e := s.Write(txt)
@@ -76,11 +76,11 @@ func TestMain(t *testing.T) {
 		So(sze, ShouldEqual, run*len(txt))
 	})
 
-	Convey("Sync data to the syncr instance", t, func() {
+	Convey("Sync data to the logr syncr instance", t, func() {
 		So(s.Sync(), ShouldBeNil)
 	})
 
-	Convey("Read data from the syncr instance", t, func() {
+	Convey("Read data from the logr syncr instance", t, func() {
 		s.Seek(0, 0)
 		for i := 0; i <= run*50; i++ {
 			b := make([]byte, 128)
@@ -112,7 +112,7 @@ func TestMain(t *testing.T) {
 		So(e, ShouldBeNil)
 	})
 
-	Convey("Close the syncr instance", t, func() {
+	Convey("Close the logr syncr instance", t, func() {
 		So(s.Close(), ShouldBeNil)
 	})
 
