@@ -92,7 +92,7 @@ func New(name string, opts *Options) (s *Storage, e error) {
 	s.file.path = path.Dir(s.file.full)
 	s.file.base = path.Base(s.file.full)
 	s.file.extn = path.Ext(s.file.full)
-	s.file.name = s.file.base[:len(s.file.extn)+1]
+	s.file.name = s.file.base[:len(s.file.base)-len(s.file.extn)]
 	s.file.main = path.Join(s.file.path, s.file.base)
 
 	s.serv.ctx = context.Background()

@@ -74,7 +74,7 @@ func New(name string, opts *Options) (s *Storage, e error) {
 	s.file.path = path.Dir(name)
 	s.file.base = path.Base(name)
 	s.file.extn = path.Ext(name)
-	s.file.name = s.file.base[:len(s.file.extn)+1]
+	s.file.name = s.file.base[:len(s.file.base)-len(s.file.extn)]
 	s.file.main = path.Join(s.file.path, s.file.base)
 
 	s.size.max = opts.MaxSize * 1024 * 1024
