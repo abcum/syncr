@@ -52,6 +52,8 @@ type Options struct {
 	// each write using the buffered data. MinSize should be specified in
 	// megabytes.
 	MinSize int
+	// BufferWrites
+	BufferWrites bool
 }
 
 // Storage represents a Amazon S3 reader and writer.
@@ -256,6 +258,10 @@ func (s *Storage) load(file string) (err error) {
 }
 
 func (s *Storage) sync() (err error) {
+
+	if s.size.now == 0 {
+		return nil
+	}
 
 	obj := &s3.PutObjectInput{
 		Bucket: aws.String(s.file.buck),

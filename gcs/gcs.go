@@ -239,6 +239,10 @@ func (s *Storage) load(file string) (err error) {
 
 func (s *Storage) sync() (err error) {
 
+	if s.size.now == 0 {
+		return nil
+	}
+
 	wtr := s.serv.bck.Object(s.name()).NewWriter(s.serv.ctx)
 
 	if _, err = wtr.Write(s.buff.bit); err != nil {
