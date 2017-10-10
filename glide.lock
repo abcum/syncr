@@ -1,8 +1,8 @@
 hash: 1567b2feefe2ce8d395dcdcc9dad02f8bc181e0762d9145a6c202758ff660493
-updated: 2017-06-17T15:17:40.755373982+01:00
+updated: 2017-10-10T18:48:51.424149+01:00
 imports:
 - name: cloud.google.com/go
-  version: e11d9d1a1722e191d3d017c08077f2c15189769a
+  version: eaddaf6dd7ee35fd3c2420c8d27478db176b0485
   subpackages:
   - compute/metadata
   - iam
@@ -11,9 +11,9 @@ imports:
   - internal/version
   - storage
 - name: github.com/abcum/bump
-  version: 8e94c062e9c7a9c89bddc31b17ee499f89698fc5
+  version: 7ba7a4e9094d5a666ef274de35f94715bbeb926c
 - name: github.com/aws/aws-sdk-go
-  version: 96358b8282b1a3aa66836d2f2fe66216cc419668
+  version: 760741802ad40f49ae9fc4a69ef6706d2527d62e
   subpackages:
   - aws
   - aws/awserr
@@ -43,19 +43,22 @@ imports:
   - service/s3/s3manager
   - service/sts
 - name: github.com/go-ini/ini
-  version: d3de07a94d22b4a0972deb4b96d790c2c0ce8333
+  version: c787282c39ac1fc618827141a1f762240def08a3
 - name: github.com/golang/protobuf
-  version: e325f446bebc2998605911c0a2650d9920361d4a
+  version: 130e6b02ab059e7b717a096f397c5b60111cae74
   subpackages:
   - proto
   - protoc-gen-go/descriptor
+  - ptypes
   - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
 - name: github.com/googleapis/gax-go
-  version: 84ed26760e7f6f80887a2fbfb50db3cc415d2cea
+  version: 317e0006254c44a0ac427cc52a0e083ff0b9622f
 - name: github.com/jmespath/go-jmespath
   version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
 - name: golang.org/x/net
-  version: 973f3f3bbd50e92b13faa6c53ec16f49b45e851c
+  version: a04bdaca5b32abe1c069418fb7088ae607de5bd0
   subpackages:
   - context
   - context/ctxhttp
@@ -66,21 +69,21 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/oauth2
-  version: f047394b6d14284165300fd82dad67edb3a4d7f6
+  version: bb50c06baba3d0c76f9d125c0719093e315b5b44
   subpackages:
   - google
   - internal
   - jws
   - jwt
 - name: golang.org/x/text
-  version: 9e2f80a6ba7ed4ba13e0cd4b1f094bf916875735
+  version: 825fc78a2fd6fa0a5447e300189e3219e05e1f25
   subpackages:
   - secure/bidirule
   - transform
   - unicode/bidi
   - unicode/norm
 - name: google.golang.org/api
-  version: 324744a33f1f37e63dd1695cfb3ec9a3e4a1cb05
+  version: f4e479843e4b5935c598bdbe5b45ce49b4e5242d
   subpackages:
   - gensupport
   - googleapi
@@ -90,9 +93,9 @@ imports:
   - iterator
   - option
   - storage/v1
-  - transport
+  - transport/http
 - name: google.golang.org/appengine
-  version: a2f4131514e563cedfdb6e7d267df9ad48591e93
+  version: 24e4144ec923c2374f6b06610c0df16a9222c3d9
   subpackages:
   - internal
   - internal/app_identity
@@ -101,47 +104,47 @@ imports:
   - internal/log
   - internal/modules
   - internal/remote_api
-  - internal/socket
   - internal/urlfetch
-  - socket
   - urlfetch
 - name: google.golang.org/genproto
-  version: aa2eb687b4d3e17154372564ad8d6bf11c3cf21f
+  version: f676e0f3ac6395ff1a529ae59a6670878a8371a6
   subpackages:
   - googleapis/api/annotations
   - googleapis/iam/v1
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: c5c761dbca07f4d0efafd3f430a40dcdf1c1163f
+  version: 3f10311ccf076b6b7cba28273df3290d42e60982
   subpackages:
+  - balancer
   - codes
+  - connectivity
   - credentials
-  - credentials/oauth
-  - grpclb/grpc_lb_v1
+  - grpclb/grpc_lb_v1/messages
   - grpclog
   - internal
   - keepalive
   - metadata
   - naming
   - peer
+  - resolver
   - stats
   - status
   - tap
   - transport
 testImports:
 - name: github.com/gopherjs/gopherjs
-  version: dc374d32704510cb387457180ca9d5193978b555
+  version: 415225646bb92c4449bb484646f2c95a98402f6f
   subpackages:
   - js
 - name: github.com/jtolds/gls
   version: 77f18212c9c7edc9bd6a33d383a7b545ce62f064
 - name: github.com/smartystreets/assertions
-  version: 4ea54c1f28ad3ae597e76607dea3871fa177e263
+  version: 0b37b35ec7434b77e77a4bb29b79677cced992ea
   subpackages:
   - internal/go-render/render
   - internal/oglematchers
 - name: github.com/smartystreets/goconvey
-  version: d4c757aa9afd1e2fc1832aaab209b5794eb336e1
+  version: 9e8dc3f972df6c8fcc0375ef492c24d0bb204857
   subpackages:
   - convey
   - convey/gotest
