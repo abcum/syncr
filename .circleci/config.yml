@@ -3,12 +3,14 @@ jobs:
   build:
     docker:
       - image: abcum/circle-golang:latest
+        environment:
+          GOOGLE_APPLICATION_CREDENTIALS: ~/gcloud-service-key.json
     working_directory: /go/src/github.com/abcum/syncr
     steps:
       - checkout
       - run:
           name: Auth
-          command: source gcauth
+          command: gcauth
       - run:
           name: Clean
           command: make clean
