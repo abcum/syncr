@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Auth
-          command: gcauth
+          command: source gcauth
       - run:
           name: Clean
           command: make clean
