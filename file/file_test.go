@@ -27,7 +27,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-var run = 5000
+var run = 10000
 var sze int
 var txt []byte
 var out []byte
@@ -81,21 +81,25 @@ func TestMain(t *testing.T) {
 	})
 
 	Convey("Read data from the file syncr instance", t, func() {
-		s.Seek(0, 0)
-		for i := 0; i <= run*50; i++ {
-			b := make([]byte, 128)
-			l, e := s.Read(b)
-			out = append(out, b[:l]...)
-			if e != nil {
-				if e != io.EOF {
-					panic(e)
+		vs := []int{12, 128, 1024, 1024 * 1024 * 4}
+		for _, v := range vs {
+			out = nil
+			s.Seek(0, 0)
+			for i := 0; ; i += v {
+				b := make([]byte, v)
+				l, e := s.Read(b)
+				out = append(out, b[:l]...)
+				if e != nil {
+					if e != io.EOF {
+						panic(e)
+					}
+					break
 				}
-				break
 			}
+			So(len(out), ShouldEqual, run*len(txt))
+			So(out[:len(txt)], ShouldResemble, txt)
+			So(out[len(out)-len(txt):], ShouldResemble, txt)
 		}
-		So(len(out), ShouldEqual, run*len(txt))
-		So(out[:len(txt)], ShouldResemble, txt)
-		So(out[len(out)-len(txt):], ShouldResemble, txt)
 	})
 
 	Convey("Close the file syncr instance", t, func() {
