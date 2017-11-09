@@ -1,5 +1,5 @@
-hash: 1567b2feefe2ce8d395dcdcc9dad02f8bc181e0762d9145a6c202758ff660493
-updated: 2017-11-08T00:24:53.193648Z
+hash: 75c25095f05c60b15e0de17638e215e6ee4c0969b8e1eb365c0c52ba32f6a2fe
+updated: 2017-11-09T17:14:16.591757Z
 imports:
 - name: cloud.google.com/go
   version: 2d3a6656c17a60b0815b7e06ab0be04eacb6e613
@@ -13,7 +13,7 @@ imports:
 - name: github.com/abcum/bump
   version: a387c1b94124df52e6cd702ed49ac8442d13dc1f
 - name: github.com/aws/aws-sdk-go
-  version: 6061953e33da7e141a16c70ec9535467ce7f189a
+  version: a201bf33b18ad4ab54344e4bc26b87eb6ad37b8e
   subpackages:
   - aws
   - aws/awserr
@@ -83,7 +83,7 @@ imports:
   - unicode/bidi
   - unicode/norm
 - name: google.golang.org/api
-  version: 76b09a3314405551b1f19de9944347fcda3f80ae
+  version: 34bc9e3ce3692fb01d22f685df28518773cbdae9
   subpackages:
   - gensupport
   - googleapi
@@ -113,7 +113,7 @@ imports:
   - googleapis/iam/v1
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: abd3e10d785b2ef7e32b5207eb7c303301a4ac84
+  version: ebefec97ddde8309567144d2cdffe9801fda7fc0
   subpackages:
   - balancer
   - balancer/roundrobin
@@ -137,7 +137,7 @@ imports:
   - transport
 testImports:
 - name: github.com/gopherjs/gopherjs
-  version: 415225646bb92c4449bb484646f2c95a98402f6f
+  version: 444abdf920945de5d4a977b572bcc6c674d1e4eb
   subpackages:
   - js
 - name: github.com/jtolds/gls
