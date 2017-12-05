@@ -6,7 +6,7 @@ import:
   - storage
 - package: github.com/abcum/bump
 - package: github.com/aws/aws-sdk-go
-  version: ^1.12.25
+  version: ^1.12.40
   subpackages:
   - aws
   - aws/endpoints
