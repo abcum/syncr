@@ -47,7 +47,7 @@ type Options struct {
 	MinSize int
 }
 
-// Storage represents a Amazon S3 reader and writer.
+// Storage represents a Google Cloud Storage reader and writer.
 type Storage struct {
 	sync.Mutex
 	opts *Options
