@@ -1,5 +1,5 @@
 hash: ab46d87de2cdde482dc6aa6b80198aad8bdad781f71e02c9db3d9d76cf1978f9
-updated: 2018-04-05T08:08:36.6748+01:00
+updated: 2018-04-05T08:41:44.266226+01:00
 imports:
 - name: cloud.google.com/go
   version: 4b98a6370e36d7a85192e7bad08a4ebd82eac2a8
@@ -12,7 +12,7 @@ imports:
   - internal/version
   - storage
 - name: github.com/abcum/bump
-  version: e52572d3ec79ace5222da0688e3d1bb87c76f776
+  version: 526934c541e071b5a330671c76434b9e32d55638
 - name: github.com/aws/aws-sdk-go
   version: 7f68df2a5baf19398d17def23a514a6e617e5937
   subpackages:
