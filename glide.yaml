@@ -1,12 +1,12 @@
 package: github.com/abcum/syncr
 import:
 - package: cloud.google.com/go
-  version: ^0.20.0
+  version: ^0.21.0
   subpackages:
   - storage
 - package: github.com/abcum/bump
 - package: github.com/aws/aws-sdk-go
-  version: ^1.13.28
+  version: ^1.13.39
   subpackages:
   - aws
   - aws/endpoints
