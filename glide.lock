@@ -1,8 +1,8 @@
-hash: 7f1b6726e6a9e93067d0560a01cd31c75fa1332c2c06c6e2ec8b37b9cc25f8d4
-updated: 2018-10-24T00:48:17.991612+01:00
+hash: 05a9bc345ea0df07f1c31b66a35ac5ea36b9627e1d1cd82a34c382ae625c01dc
+updated: 2019-06-15T21:55:23.321077+01:00
 imports:
 - name: cloud.google.com/go
-  version: debcad1964693daf8ef4bc06292d7e828e075130
+  version: 457ea5c15ccf3b87db582c450e80101989da35f7
   subpackages:
   - compute/metadata
   - iam
@@ -11,14 +11,10 @@ imports:
   - internal/trace
   - internal/version
   - storage
-- name: contrib.go.opencensus.io/exporter/stackdriver
-  version: 9f333b48d3826fe9ed540ba2095c1fbd8514f750
-  subpackages:
-  - propagation
 - name: github.com/abcum/bump
-  version: 6b53cd9c55bca5bf7cbd659737c682d6736f3dde
+  version: bb9bd72d399dc9707cc8261f2bfc690960b736f0
 - name: github.com/aws/aws-sdk-go
-  version: 9a79cc876234949427d966249a09fc98e7864bde
+  version: 78c38e1a35a0ae2c4f60bd83e9c68bcb651744d1
   subpackages:
   - aws
   - aws/awserr
@@ -29,6 +25,7 @@ imports:
   - aws/credentials
   - aws/credentials/ec2rolecreds
   - aws/credentials/endpointcreds
+  - aws/credentials/processcreds
   - aws/credentials/stscreds
   - aws/csm
   - aws/defaults
@@ -46,6 +43,7 @@ imports:
   - private/protocol
   - private/protocol/eventstream
   - private/protocol/eventstream/eventstreamapi
+  - private/protocol/json/jsonutil
   - private/protocol/query
   - private/protocol/query/queryutil
   - private/protocol/rest
@@ -55,43 +53,35 @@ imports:
   - service/s3/s3iface
   - service/s3/s3manager
   - service/sts
-- name: github.com/client9/misspell
-  version: c0b55c8239520f6b5aa15a0207ca8b28027ba49e
-  subpackages:
-  - cmd/misspell
-- name: github.com/golang/lint
-  version: 06c8688daad7faa9da5a0c2f163a3d14aac986ca
-  subpackages:
-  - golint
 - name: github.com/golang/protobuf
-  version: e344474228f55cc8e5f2342b0493b71bcdd258f4
+  version: b285ee9cfc6c881bb20c0d8dc73370ea9b9ec90f
   subpackages:
   - proto
-  - protoc-gen-go
   - protoc-gen-go/descriptor
-  - protoc-gen-go/generator
-  - protoc-gen-go/generator/internal/remap
-  - protoc-gen-go/grpc
-  - protoc-gen-go/plugin
   - ptypes
   - ptypes/any
   - ptypes/duration
   - ptypes/timestamp
 - name: github.com/googleapis/gax-go
-  version: 1ef592c90f479e3ab30c6c2312e20e13881b7ea6
+  version: bd5b16380fd03dc758d11cef74ba2e3bc8b0e8c2
+  subpackages:
+  - v2
+- name: github.com/hashicorp/golang-lru
+  version: 59383c442f7d7b190497e9bb8fc17a48d06cd03f
+  subpackages:
+  - simplelru
 - name: github.com/jmespath/go-jmespath
   version: c2b33e8439af944379acbdd9c3a5fe0bc44bd8a5
-- name: github.com/kisielk/gotool
-  version: 80517062f582ea3340cd4baf70e86d539ae7d84d
-  subpackages:
-  - internal/load
 - name: go.opencensus.io
-  version: f21fe3feadc5461b952191052818685a410428d4
+  version: f6172e422374225c6748bd2a9c872e88c2eb43d4
   subpackages:
   - internal
   - internal/tagencoding
+  - metric/metricdata
+  - metric/metricproducer
   - plugin/ochttp
   - plugin/ochttp/propagation/b3
+  - resource
   - stats
   - stats/internal
   - stats/view
@@ -100,10 +90,8 @@ imports:
   - trace/internal
   - trace/propagation
   - trace/tracestate
-- name: golang.org/x/lint
-  version: 06c8688daad7faa9da5a0c2f163a3d14aac986ca
 - name: golang.org/x/net
-  version: 161cd47e91fd58ac17490ef4d742dc98bb4cf60e
+  version: d28f0bde5980168871434b95cfc858db9f2a7a99
   subpackages:
   - context
   - context/ctxhttp
@@ -114,38 +102,25 @@ imports:
   - internal/timeseries
   - trace
 - name: golang.org/x/oauth2
-  version: d2e6202438beef2727060aa7cabdd924d92ebfd9
+  version: 0f29369cfe4552d0e4bcddc57cc75f4d7e672a33
   subpackages:
   - google
   - internal
   - jws
   - jwt
 - name: golang.org/x/sys
-  version: d0be0721c37eeb5299f245a996a483160fc36940
+  version: b47fdc937951267e2d980171881317deea47f29b
   subpackages:
   - unix
 - name: golang.org/x/text
-  version: f21a4dfb5e38f5895301dc265a8def02365cc3d0
+  version: 342b2e1fbaa52c93f31447ad2c6abc048c63e475
   subpackages:
   - secure/bidirule
   - transform
   - unicode/bidi
   - unicode/norm
-- name: golang.org/x/tools
-  version: 18207bb12d3a3338e74403fed8ca1ba866dd3a57
-  subpackages:
-  - cmd/goimports
-  - go/ast/astutil
-  - go/buildutil
-  - go/gcexportdata
-  - go/internal/cgo
-  - go/internal/gcimporter
-  - go/loader
-  - go/types/typeutil
-  - imports
-  - internal/fastwalk
 - name: google.golang.org/api
-  version: 7ca32eb868bf53ea2fc406698eb98583a8073d19
+  version: 46089227b9f9a197feccb6586bc0a5ebb24589e7
   subpackages:
   - gensupport
   - googleapi
@@ -156,8 +131,9 @@ imports:
   - option
   - storage/v1
   - transport/http
+  - transport/http/internal/propagation
 - name: google.golang.org/appengine
-  version: 03cac3b07182cfb08c0d0c0b6ee72a1ceb151c92
+  version: b2f4a3cf3c67576a2ee09e1fe62656a5086ce880
   subpackages:
   - internal
   - internal/app_identity
@@ -169,29 +145,36 @@ imports:
   - internal/urlfetch
   - urlfetch
 - name: google.golang.org/genproto
-  version: 11092d34479b07829b72e10713b159248caf5dad
+  version: a7e196e89fd3a3c4d103ca540bd5dac3a736e375
   subpackages:
   - googleapis/api/annotations
   - googleapis/iam/v1
   - googleapis/rpc/code
   - googleapis/rpc/status
+  - googleapis/type/expr
 - name: google.golang.org/grpc
-  version: 46ee6abebf62241b49973422c42250327bb94169
+  version: fc15416d24edaf56900943557d460bbf9f7f739a
   subpackages:
   - balancer
   - balancer/base
   - balancer/roundrobin
+  - binarylog/grpc_binarylog_v1
   - codes
   - connectivity
   - credentials
+  - credentials/internal
   - encoding
   - encoding/proto
   - grpclog
   - internal
   - internal/backoff
+  - internal/balancerload
+  - internal/binarylog
   - internal/channelz
   - internal/envconfig
   - internal/grpcrand
+  - internal/grpcsync
+  - internal/syscall
   - internal/transport
   - keepalive
   - metadata
@@ -200,36 +183,21 @@ imports:
   - resolver
   - resolver/dns
   - resolver/passthrough
+  - serviceconfig
   - stats
   - status
   - tap
-- name: honnef.co/go/tools
-  version: 88497007e8588ea5b6baee991f74a1607e809487
-  subpackages:
-  - callgraph
-  - callgraph/static
-  - cmd/staticcheck
-  - deprecated
-  - functions
-  - internal/sharedcheck
-  - lint
-  - lint/lintdsl
-  - lint/lintutil
-  - ssa
-  - ssa/ssautil
-  - staticcheck
-  - staticcheck/vrp
-  - version
 testImports:
 - name: github.com/gopherjs/gopherjs
-  version: 0210a2f0f73c96103378b0b935f39868e5731809
+  version: 3e4dfb77656c424b6d1196a4d5fed0fcf63677cc
   subpackages:
   - js
 - name: github.com/jtolds/gls
-  version: 77f18212c9c7edc9bd6a33d383a7b545ce62f064
+  version: b4936e06046bbecbb94cae9c18127ebe510a2cb9
 - name: github.com/smartystreets/assertions
-  version: 7c9eb446e3cf06e83049467a5f25c38730ce7034
+  version: d380eccd517d419eb73a0a90cc3ffc405f1e029e
   subpackages:
+  - internal/go-diff/diffmatchpatch
   - internal/go-render/render
   - internal/oglematchers
 - name: github.com/smartystreets/goconvey
